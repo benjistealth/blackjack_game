@@ -86,7 +86,6 @@ function Twist() {
   dealer.push(0); //could break DoTotals() function otherwise
 } //ensure the dealer and player arrays are the same length if player twists and dealer doesn't
 
-
 //add up player scores - create add scores function to replace these and pass in arrays instead
 function DoTotals() {
   player_total = 0;
@@ -96,22 +95,16 @@ function DoTotals() {
     dealer_total += dealer[i];
   }
 }
-//condition ? exprIfTrue : exprIfFalse
-// function EvalWinner() {
-//   DoTotals();
-//   ((dealer_total > player_total) || (player_total > 21)) ? console.log("Dealer Wins") : console.log("Player Wins");
-//   ((dealer_total < player_total) || (dealer_total > 21)) ? console.log("Player Wins") : console.log; ("Dealer Wins");
-//   dealer_total === player_total ? console.log("Draw !!") : DoTotals();
-// }
+//evaluate if someone has won the game
 function EvalWinner() {
   DoTotals();
-  if(player_total === 21) {console.log("Player Wins");}
+  if(player_total === 21){console.log("Player Wins");}
+  else if(dealer_total === 21){console.log("Dealer Wins");}
   let eval = player_total - dealer_total;
-  if (eval > 0) {console.log("Player Wins");}
+  if ((eval > 0) && (player_total <= 21)) {console.log("Player Wins");}
   else if (eval < 0) {console.log("Dealer Wins");}
   else if(eval == 0) {console.log("Draw !!");}
 }
-
 
 //calculate the current totals and print scores out
 function PrintScores() {
@@ -120,9 +113,4 @@ function PrintScores() {
   console.log("Dealer Total : " + dealer_total);
 }
 
-//running above functions to test behaviour by starting the game
-
-// while ((player_total <= 21) && (dealer_total <= 21)) {
-//   UserStart();
-// }
 UserStart();
