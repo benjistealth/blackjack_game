@@ -25,25 +25,25 @@ function UserStart() {
   if (confirm(play) == true) {
     PlayGame();
   } else {
-    // re-ask the question "Would you like to play Blackjack?" to basically wait until someone wants to play
     UserStart();
   }
 }
-
+//start playing the game
 function PlayGame() {
-  console.log("You started the game !");
-  if (player.length === 0) {
+  if (player.length === 0) { //check if it is the first hand
+    console.log("You started the game !");
     Deal();
     PrintScores();
-  }
-  else {
     StickorTwist();
   }
-  PrintScores();
+  else {
+    StickorTwist(); //if not first hand only use 1 card
+  }
 }
 
 function StickorTwist() {
-  let twist = "would you like to Twist or Stick ? \nEither OK or Cancel.";
+  console.log("Press OK to Twist or Cancel to Stick.....");
+  let twist = "Press OK to Twist or Cancel to Stick \nEither OK or Cancel.";
   if (confirm(twist) == true) {
     Twist();
     EvalWinner();
@@ -53,13 +53,6 @@ function StickorTwist() {
     EvalWinner();
   }
   PrintScores();
-}
-
-function PrintScores() {
-  PlayerTotal();
-  DealerTotal();
-  console.log("Player Total : " + player_total);
-  console.log("Dealer Total : " + dealer_total);
 }
 
 //function to deal cards- may split into payer and dealer later
@@ -76,38 +69,60 @@ function Deal() {
 }
 //function to generate a twist
 function Twist() {
-  let min = 4;
-  let max = 12;
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+  DoTotals();
+  if (player_total < 21) {
+    let min = 4;
+    let max = 12;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+  //Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
   player_score = Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
   player.push(player_score);
-  if (dealer_score < 17) {
+  }
+  else if (dealer_total <= 17) {
     dealer_score = Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive 
     dealer.push(dealer_score);
   }
-}
+  dealer.push(0); //could break DoTotals() function otherwise
+} //ensure the dealer and player arrays are the same length if player twists and dealer doesn't
+
+
 //add up player scores - create add scores function to replace these and pass in arrays instead
-function PlayerTotal() {
+function DoTotals() {
+  player_total = 0;
+  dealer_total = 0;
   for (let i = 0; i < player.length; i++) {
     player_total += player[i];
-  }
-  // PrintScores();
-}
-//add up dealer scores
-function DealerTotal() {
-  for (let i = 0; i < dealer.length; i++) {
     dealer_total += dealer[i];
   }
-  // PrintScores();
 }
 //condition ? exprIfTrue : exprIfFalse
+// function EvalWinner() {
+//   DoTotals();
+//   ((dealer_total > player_total) || (player_total > 21)) ? console.log("Dealer Wins") : console.log("Player Wins");
+//   ((dealer_total < player_total) || (dealer_total > 21)) ? console.log("Player Wins") : console.log; ("Dealer Wins");
+//   dealer_total === player_total ? console.log("Draw !!") : DoTotals();
+// }
 function EvalWinner() {
-  dealer_total > player_total ? console.log("Dealer Wins") : console.log("Player Wins");
-  dealer_total < player_total ? console.log("Player Wins") : console.log; ("Dealer Wins");
-  dealer_total === player_total ? console.log("Draw !!") : PrintScores();
+  DoTotals();
+  if(player_total === 21) {console.log("Player Wins");}
+  let eval = player_total - dealer_total;
+  if (eval > 0) {console.log("Player Wins");}
+  else if (eval < 0) {console.log("Dealer Wins");}
+  else if(eval == 0) {console.log("Draw !!");}
+}
+
+
+//calculate the current totals and print scores out
+function PrintScores() {
+  DoTotals();
+  console.log("Player Total : " + player_total);
+  console.log("Dealer Total : " + dealer_total);
 }
 
 //running above functions to test behaviour by starting the game
+
+// while ((player_total <= 21) && (dealer_total <= 21)) {
+//   UserStart();
+// }
 UserStart();
