@@ -12,30 +12,55 @@
 //if dealer >21 --> lose
 //if stay --> do compare hand()
 //
-
-let player = [0]; // keep track of every card in the array then add them to get scores
-let dealer = [0];
+var player = [0]; // keep track of every card in the array then add them to get scores
+var dealer = [0];
+var player_total = 0; //keep added score in here
+var dealer_total = 0;
 
 //prompt user to play game - if play = true start game otherwise reload prompt
-function User_Start() {
+function UserStart() {
   let play = "Would you like to play Blackjack ? \nEither OK or Cancel.";
   if (confirm(play) == true) {
-    Start_Game();
+    StartGame();
   } else {
-    prompt("You canceled!");
-    User_Start();
+    // prompt("You canceled!");
+    UserStart();
   }
 }
 
-function Start_Game() {
+function StartGame() {
   console.log("You started the game");
   Deal();
 }
-
+//function to deal cards- may split into payer and dealer later
 function Deal() {
-  console.log("Dealing");
-  player.push = Math.random(22);
+  console.log("Initial Deal...");
+  let player_score = Twist(2, 12);//need a condition here to swap between 2-21(2 cards initial deal) 4-11(twist)
+  player.push(player_score);//add a random score to the player array
+  console.log("player score : " + player_score);//keep last score in here
+}
+//function to generate a twist
+function Twist(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+}
+//add up player scores
+function PlayerTotal(){
+  for(let i = 0; i < player.length; i++){
+    player_total += player[i];
+  }
+  return player_total;
+}
+//add up dealer scores
+function DealerTotal(){
+  for(let i = 0; i < player.length; i++){
+    player_total += player[i];
+  }
+  return player_total;
 }
 
-//running above functions to test behaviour
-User_Start();
+
+
+//running above functions to test behaviour by starting the game
+UserStart();
