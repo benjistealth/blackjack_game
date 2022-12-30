@@ -23,41 +23,56 @@ var dealer_score = 0;
 function UserStart() {
   let play = "Would you like to play Blackjack ? \nEither OK or Cancel.";
   if (confirm(play) == true) {
-    StartGame();
+    PlayGame();
   } else {
     // re-ask the question "Would you like to play Blackjack?" to basically wait until someone wants to play
     UserStart();
   }
 }
 
-function StartGame() {
-  console.log("You started the game");
+function PlayGame() {
+  console.log("You started the game !");
   if (player.length === 0) {
-    player_score = Deal();
-    dealer_score = Deal();
-    console.log("Player Initil Score : " + player_score);
-    console.log("Dealer Initil Score : " + dealer_score);
+    Deal();
+    PrintScores();
   }
   else {
-    player_score = Twist();
-    dealer_score = Twist();
-    console.log("Player total Score : " + player_total);
-    console.log("Dealer total Score : " + dealer_total);
+    StickorTwist();
   }
+  PrintScores();
 }
+
+function StickorTwist() {
+  let twist = "would you like to Twist or Stick ? \nEither OK or Cancel.";
+  if (confirm(twist) == true) {
+    Twist();
+    EvalWinner();
+    PrintScores();
+  }
+  else {
+    EvalWinner();
+  }
+  PrintScores();
+}
+
+function PrintScores() {
+  PlayerTotal();
+  DealerTotal();
+  console.log("Player Total : " + player_total);
+  console.log("Dealer Total : " + dealer_total);
+}
+
 //function to deal cards- may split into payer and dealer later
 function Deal() {
-  console.log("Initial Deal...");
+  console.log("Initial Deal for player and dealer.....");
   let min = 2;
   let max = 22;
   min = Math.ceil(min);
   max = Math.floor(max);
-  // let player_score = Twist(2, 12);//need a condition here to swap between 2-21(2 cards initial deal) 4-11(twist)
-  // player.push(player_score);//add a random score to the player array
-  // console.log("player score : " + player_score);//keep last score in here
-  let score = Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-  // score = Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
-  return score;
+  player_score = Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+  dealer_score = Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+  player.push(player_score);
+  dealer.push(dealer_score);
 }
 //function to generate a twist
 function Twist() {
@@ -65,24 +80,34 @@ function Twist() {
   let max = 12;
   min = Math.ceil(min);
   max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+  Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+  player_score = Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+  player.push(player_score);
+  if (dealer_score < 17) {
+    dealer_score = Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive 
+    dealer.push(dealer_score);
+  }
 }
-//add up player scores
+//add up player scores - create add scores function to replace these and pass in arrays instead
 function PlayerTotal() {
   for (let i = 0; i < player.length; i++) {
     player_total += player[i];
   }
-  return player_total;
+  // PrintScores();
 }
 //add up dealer scores
 function DealerTotal() {
   for (let i = 0; i < dealer.length; i++) {
     dealer_total += dealer[i];
   }
-  return dealer_total;
+  // PrintScores();
 }
-
-
+//condition ? exprIfTrue : exprIfFalse
+function EvalWinner() {
+  dealer_total > player_total ? console.log("Dealer Wins") : console.log("Player Wins");
+  dealer_total < player_total ? console.log("Player Wins") : console.log; ("Dealer Wins");
+  dealer_total === player_total ? console.log("Draw !!") : PrintScores();
+}
 
 //running above functions to test behaviour by starting the game
 UserStart();
